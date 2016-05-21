@@ -1,5 +1,34 @@
 # coding=utf-8
+#        ┏┓　　　┏┓+ +
+# 　　　┏┛┻━━━┛┻┓ + +
+# 　　　┃　　　　　　　┃ 　
+# 　　　┃　　　━　　　┃ ++ + + +
+# 　　 ████━████ ┃+
+# 　　　┃　　　　　　　┃ +
+# 　　　┃　　　┻　　　┃
+# 　　　┃　　　　　　　┃ + +
+# 　　　┗━┓　　　┏━┛
+# 　　　　　┃　　　┃　　　　　　　　　　　
+# 　　　　　┃　　　┃ + + + +
+# 　　　　　┃　　　┃　　　　Codes are far away from bugs with the animal protecting　　　
+# 　　　　　┃　　　┃ + 　　　　神兽保佑,代码无bug　　
+# 　　　　　┃　　　┃
+# 　　　　　┃　　　┃　　+　　　　　　　　　
+# 　　　　　┃　 　　┗━━━┓ + +
+# 　　　　　┃ 　　　　　　　┣┓
+# 　　　　　┃ 　　　　　　　┏┛
+# 　　　　　┗┓┓┏━┳┓┏┛ + + + +
+# 　　　　　　┃┫┫　┃┫┫
+# 　　　　　　┗┻┛　┗┻┛+ + + +
+
+"""
+Author = Eric_Chan
+Create_Time = 2016/05/21
+输入文本列表
+输出特征矩阵
+"""
 import jieba
+import numpy as np
 
 
 def load_file(file_name, charset='utf-8'):
@@ -30,7 +59,7 @@ def write_file(file_name, line_list, charset='utf-8', mode='w'):
     f1 = open(file_name, mode=mode)
     for line in line_list:
         line.encode(charset)
-        f1.write(line+'\n')
+        f1.write(line + '\n')
     f1.flush()
     f1.close()
 
@@ -79,13 +108,23 @@ def create_vector(word_list, vocab_list):
             vector[vocab_list.index(w)] += 1
     return vector
 
+
 if __name__ == '__main__':
     comment_list = load_file('dataSet/c1.txt')
     comment_list += load_file('dataSet/c2.txt')
     stopwords = load_file('dataSet/stopWord.txt')
     comment_words = cut_sentence(comment_list, stopwords)
     vocab = create_vocab(comment_words)
-    print vocab.__len__()
-    # print ' '.join(vocab)
-    # print ' '.join(comment_words[5])
-    print create_vector(comment_words[0], vocab_list=vocab)
+    print "词库构建完毕,词语总数:", vocab.__len__()
+
+    feature_matrix = []  # 特征矩阵
+    for c_w in comment_words:  # 将每条评论转化为特征向量并构成特征矩阵
+        feature_matrix.append(create_vector(c_w, vocab_list=vocab))
+    np.save('dataSet/feature_matrix_save', feature_matrix)
+    print "特征矩阵构建完毕 并保存为npy格式"
+
+    class_result = [0] * 500 + [1] * 500
+    np.save('dataSet/class_result_save', class_result)
+    print "对应类别列表构建完毕 并保存为npy格式"
+    # a = np.load('dataSet/feature_matrix_save.npy')
+    # print a
