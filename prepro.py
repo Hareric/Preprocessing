@@ -58,7 +58,7 @@ def write_file(file_name, line_list, charset='utf-8', mode='w'):
     """
     f1 = open(file_name, mode=mode)
     for line in line_list:
-        line.encode(charset)
+        line = line.encode(charset)
         f1.write(line + '\n')
     f1.flush()
     f1.close()
